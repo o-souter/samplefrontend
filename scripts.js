@@ -1,18 +1,43 @@
-rowCount = 50
+snackCount = 30
+mainCount = 45
+drinkCount = 60
+// priceCount = Math.max([snackCount, mainCount, drinkCount]) //
 
-itemTemplate = "<div><h2>Category</h2><h3>Price/Weight</h3></div>"
 
+itemTemplate = "<div><h5>Category</h5>Image<h5>Name</h5><h6>Price/Weight</h6></div>"
+imgTemplate = $("<img>")
+imgTemplate.attr("src", "sampleItem.png")
 
 $(document).ready(function(){
     // jQuery methods go here...
-    $("#mainGrid").css("grid-template-rows", "repeat(" + rowCount +", 1fr)");
-    // $("mainGrid")
-    for (let i = 0; i < rowCount; i++){
-        snackItem = "<div>Snack</div>"
-        mainItem = "<div>Main</div>"
-        drinkItem = "<div>Drink</div>"
-        priceWeightItem = "<div>Price/Weight</div>"
-        $("#mainGrid").append(snackItem, mainItem, drinkItem, priceWeightItem);
+
+    function createItemCard(item) {
+        var card = $('<div class="itemCard"></div>');
+
+        var category = $('<p class="item-category"></p>').text(item.category);
+        var image = $('<img>').attr('src', item.image).attr('class', "itemCardImage");
+        var name = $('<p class="item-name"></p>').text(item.name);
+        var priceWeight = $('<p class="item-price-weight"></p>').text(item.priceWeight);
+
+        card.append(category, image, name, priceWeight);
+        return card;
+    }
+
+
+
+
+
+    //Add each snack item
+    $("#snackCol").css("grid-template-rows", "repeat(" + snackCount +", 1fr)");
+    for (let i = 0; i < snackCount; i++){
+        snackItem = {
+            category: "Snack",
+            image: "sampleItem.png",
+            name: "Snack item",
+            priceWeight: "£1.00, 200g"
+        }
+        snackCard = createItemCard(snackItem)
+        $("#snackCol").append(snackCard)
     }
     
     
