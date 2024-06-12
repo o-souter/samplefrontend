@@ -1,17 +1,20 @@
-snackCount = 30
+
+
+function toggleDropDown() {
+    $("#storeDropDown").toggleClass("hide")
+}
+
+spacer = $("<div></div>").attr("class", "item-spacer")
+
+
+snackCount = 10
 mainCount = 45
 drinkCount = 60
-// priceCount = Math.max([snackCount, mainCount, drinkCount]) //
-
-
-itemTemplate = "<div><h5>Category</h5>Image<h5>Name</h5><h6>Price/Weight</h6></div>"
-imgTemplate = $("<img>")
-imgTemplate.attr("src", "sampleItem.png")
-
 $(document).ready(function(){
-    // jQuery methods go here...
-
+    toggleDropDown()
+    //Manage items
     function createItemCard(item) {
+        //Create item card from item 
         var card = $('<div class="itemCard"></div>');
 
         var category = $('<p class="item-category"></p>').text(item.category);
@@ -29,6 +32,7 @@ $(document).ready(function(){
 
     //Add each snack item
     $("#snackCol").css("grid-template-rows", "repeat(" + snackCount +", 1fr)");
+    // $("#snackCol").append(spacer)
     for (let i = 0; i < snackCount; i++){
         snackItem = {
             category: "Snack",
@@ -39,6 +43,30 @@ $(document).ready(function(){
         snackCard = createItemCard(snackItem)
         $("#snackCol").append(snackCard)
     }
+    $("#mainCol").css("grid-template-rows", "repeat(" + snackCount +", 1fr)");
+    for (let i = 0; i < snackCount; i++){
+        snackItem = {
+            category: "Main",
+            image: "sampleItem.png",
+            name: "Main item",
+            priceWeight: "£1.00, 200g"
+        }
+        snackCard = createItemCard(snackItem)
+        $("#mainCol").append(snackCard)
+    }
+    $("#drinkCol").css("grid-template-rows", "repeat(" + snackCount +", 1fr)");
+    for (let i = 0; i < snackCount; i++){
+        snackItem = {
+            category: "Drink",
+            image: "sampleItem.png",
+            name: "Drink item",
+            priceWeight: "£1.00, 200g"
+        }
+        snackCard = createItemCard(snackItem)
+        $("#drinkCol").append(snackCard)
+    }
+
+
     
     
 
