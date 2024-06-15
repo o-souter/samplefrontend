@@ -135,12 +135,31 @@ h1 {
     border:5px solid black;
 }
 
-.itemCard {
+
+
+/* .selectedItem .itemCard{
     scroll-snap-align: start;
+    border:5px solid white;
+    background-color:var(--secondary-colour);
+    border-radius:var(--radius-borders);
+} */
+
+.itemCardContainer {
+    scroll-snap-align: start;
+}
+
+.itemCard:not(.selectedItem){
     border:5px solid white;
     background-color: white;
     border-radius:var(--radius-borders);
 }
+.itemCard.selectedItem{
+    border:5px solid white;
+    background-color: var(--secondary-colour);
+    border-radius:var(--radius-borders);
+}
+
+
 
 .itemCard p{
     text-align: center;

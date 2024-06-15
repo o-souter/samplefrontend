@@ -15,11 +15,14 @@ snackCount = 10
 mainCount = 45
 drinkCount = 60
 
+var mealDealPrice = 3.5
+
 $(document).ready(function(){
     toggleDropDown()
     //Manage items
     function createItemCard(item, itemClass) {
         //Create item card from item 
+        var container = $('<div class="itemCardContainer">')
         var card = $('<div class="itemCard ' + itemClass + '"></div>');
 
         var category = $('<p class="item-category"></p>').text(item.category);
@@ -29,7 +32,8 @@ $(document).ready(function(){
         var weight = $('<p class="item-weight"></p>').text(item.weight)
 
         card.append(category, image, name, price, weight);
-        return card;
+        container.append(card)
+        return container;
     }
     //Add each snack item
     $("#snackCol").css("grid-template-rows", "repeat(" + snackCount +", 1fr)");
@@ -124,12 +128,24 @@ $(document).ready(function(){
 
         totalPrice = (snackPrice + mainPrice + drinkPrice).toFixed(2)
         totalWeight = (snackWeight + mainWeight + drinkWeight)
+        totalSaved = (totalPrice - mealDealPrice).toFixed(2)
         $("#total-price").text(totalPrice)
         $("#total-weight").text(totalWeight)
+        $("#total-paid").text(mealDealPrice.toFixed(2))
+        $("#total-saved").text(totalSaved)
+        $(".snackCard").removeClass("selectedItem")
+        $(".snackCard.visibleItem").first().addClass("selectedItem")
+
+        $(".mainCard").removeClass("selectedItem")
+        $(".mainCard.visibleItem").first().addClass("selectedItem")
+
+        $(".drinkCard").removeClass("selectedItem")
+        $(".drinkCard.visibleItem").first().addClass("selectedItem")
+        
 
     }
 
-    setInterval(getDetailsAndUpdate, 500)
+    setInterval(getDetailsAndUpdate, 1000)
 
 
 
