@@ -39,7 +39,6 @@ $(document).ready(function(){
     $("#snackCol").css("grid-template-rows", "repeat(" + snackCount +", 1fr)");
     // $("#snackCol").append(spacer)
     for (let i = 0; i < snackCount; i++){
-        
         snackItem = {
             category: "Snack",
             image: "sampleItem.png",
@@ -77,6 +76,14 @@ $(document).ready(function(){
         $("#drinkCol").append(snackCard)
     }
 
+    drinkPadder = $('<div class="padder" id="drinkPadder"></div>')
+    $("#drinkCol").append(drinkPadder)
+
+    snackPadder = $('<div class="padder" id="snackPadder"></div>')
+    $("#snackCol").append(snackPadder)
+
+    mainPadder = $('<div class="padder" id="mainPadder"></div>')
+    $("#mainCol").append(mainPadder)
 
     //Add visibleItem class to items that are visible
     function handleIntersection(entries, observer) {
@@ -129,10 +136,19 @@ $(document).ready(function(){
         totalPrice = (snackPrice + mainPrice + drinkPrice).toFixed(2)
         totalWeight = (snackWeight + mainWeight + drinkWeight)
         totalSaved = (totalPrice - mealDealPrice).toFixed(2)
-        $("#total-price").text(totalPrice)
-        $("#total-weight").text(totalWeight)
-        $("#total-paid").text(mealDealPrice.toFixed(2))
-        $("#total-saved").text(totalSaved)
+        totalSavedSign = Math.sign(totalSaved).toString().replace("1", "")
+        totalSaved = Math.abs(totalSaved)
+        $("#total-price").text("Total Price: £" + totalPrice)
+        $("#total-weight").text("Total Weight: " + totalWeight + "g")
+        $("#total-paid").text("Total Paid £" + mealDealPrice.toFixed(2))
+        if (totalSavedSign == "-"){
+            $("#total-saved").text("Total Saved (Lost): " + totalSavedSign + "£" + totalSaved)
+        }
+        else {
+            $("#total-saved").text("Total Saved: " + totalSavedSign + "£" + totalSaved)
+        }
+
+        
         $(".snackCard").removeClass("selectedItem")
         $(".snackCard.visibleItem").first().addClass("selectedItem")
 
