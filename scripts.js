@@ -1,5 +1,31 @@
+function hideDropDowns() {
+    $("#storeDropDown").addClass("hide")
+    $("#sortDropDown").addClass("hide")
+}
+
 function toggleDropDown() {
+    hideDropDowns()
     $("#storeDropDown").toggleClass("hide")
+}
+
+function toggleSortDropDown() {
+    hideDropDowns()
+    $("#sortDropDown").toggleClass("hide")
+}
+
+// Handle closing menus when clicked off
+window.onclick = function(event) {
+    if (!event.target.matches('.dropbtn')) {
+        console.log("test")
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (!openDropdown.classList.contains('hide')) {
+                openDropdown.classList.add('hide');
+            }
+        }
+    }
 }
 
 function getRandomDetails() {
@@ -8,37 +34,37 @@ function getRandomDetails() {
     details[1] = Math.round(Math.random()*300) + "g"
     return details
 }
-spacer = $("<div></div>").attr("class", "item-spacer")
 
+function createItemCard(item, itemClass) {
+    //Create item card from item 
+    var container = $('<div class="itemCardContainer">')
+    var card = $('<div class="itemCard ' + itemClass + '"></div>');
+    // console.log(item)
+    var category = $('<p class="item-category"></p>').text(item.category);
+    
+    var image = $('<img>').attr('src', item.image).attr('class', "itemCardImage");
+    var name = $('<p class="item-name"></p>').text(item.name);
+    var price = $('<p class="item-price"></p>').text(item.price);
+    var weight = $('<p class="item-weight"></p>').text(item.weight)
+
+    card.append(category, image, name, price, weight);
+    container.append(card)
+    return container;
+}
 
 snackCount = 10
 mainCount = 45
 drinkCount = 60
+var snackArray;
+var mainArray;
+var drinkArray;
 
-var mealDealPrice = 3.5
 
-$(document).ready(function(){
-    toggleDropDown()
-    //Manage items
-    function createItemCard(item, itemClass) {
-        //Create item card from item 
-        var container = $('<div class="itemCardContainer">')
-        var card = $('<div class="itemCard ' + itemClass + '"></div>');
-
-        var category = $('<p class="item-category"></p>').text(item.category);
-        var image = $('<img>').attr('src', item.image).attr('class', "itemCardImage");
-        var name = $('<p class="item-name"></p>').text(item.name);
-        var price = $('<p class="item-price"></p>').text(item.price);
-        var weight = $('<p class="item-weight"></p>').text(item.weight)
-
-        card.append(category, image, name, price, weight);
-        container.append(card)
-        return container;
-    }
-    //Add each snack item
-    $("#snackCol").css("grid-template-rows", "repeat(" + snackCount +", 1fr)");
-    // $("#snackCol").append(spacer)
-    for (let i = 0; i < snackCount; i++){
+function createItems() {//Populate the main arrays with items
+    snackArray = new Array(snackCount)
+    mainArray = new Array(mainCount)
+    drinkArray = new Array(drinkCount)
+    for (i = 0; i < snackCount; i++) {
         snackItem = {
             category: "Snack",
             image: "sampleItem.png",
@@ -46,45 +72,116 @@ $(document).ready(function(){
             price: getRandomDetails()[0],
             weight: getRandomDetails()[1]
         }
-        snackCard = createItemCard(snackItem, "snackCard")
-        $("#snackCol").append(snackCard)
+        // console.log(snackItem)
+        snackArray.push(snackItem)
+        
     }
-    //Add each Main item
-    $("#mainCol").css("grid-template-rows", "repeat(" + snackCount +", 1fr)");
-    for (let i = 0; i < snackCount; i++){
-        snackItem = {
+    // console.log(snackArray)
+    for (i = 0; i < mainCount; i++) {
+        mainItem = {
             category: "Main",
             image: "sampleItem.png",
             name: "Main item",
             price: getRandomDetails()[0],
             weight: getRandomDetails()[1]
         }
-        snackCard = createItemCard(snackItem, "mainCard")
-        $("#mainCol").append(snackCard)
+        mainArray.push(mainItem)
     }
-    //Add each Drink item
-    $("#drinkCol").css("grid-template-rows", "repeat(" + snackCount +", 1fr)");
-    for (let i = 0; i < snackCount; i++){
-        snackItem = {
+    for (i = 0; i < drinkCount; i++) {
+        drinkItem = {
             category: "Drink",
             image: "sampleItem.png",
             name: "Drink item",
             price: getRandomDetails()[0],
             weight: getRandomDetails()[1]
         }
-        snackCard = createItemCard(snackItem, "drinkCard")
-        $("#drinkCol").append(snackCard)
+        drinkArray.push(drinkItem)
+    }
+}
+
+function sortItems(sortType, items) {
+
+    
+    itemStr = ""
+    for (item in items) {
+        itemStr.concat(item.price + ", ")
+    }
+    console.log("Sorting by " + sortType)
+    console.log("Sorting: " + itemStr)
+    if (sortType == "price") {
+        items = items.sort((a, b) => b.price - a.price)
+    }
+    else if (sortType == "weight") {
+        items = items.sort((a, b) => b.weight - a.weight)
+    }
+    else if (sortType == "protein") {
+        items = items //Not implemented yet!
     }
 
-    drinkPadder = $('<div class="padder" id="drinkPadder"></div>')
-    $("#drinkCol").append(drinkPadder)
+    itemStr = ""
+    for (item in items) {
+        itemStr.concat(item.price + ", ")
+    }
+    console.log("Sorted to: " + itemStr)
+    return items
+}
 
-    snackPadder = $('<div class="padder" id="snackPadder"></div>')
-    $("#snackCol").append(snackPadder)
+var mealDealPrice = 3.5
 
-    mainPadder = $('<div class="padder" id="mainPadder"></div>')
-    $("#mainCol").append(mainPadder)
+$(document).ready(function(){
+    hideDropDowns()
+    //Manage items
+    createItems()
 
+    drinkArray = sortItems("price", drinkArray)
+    mainArray = sortItems("price", mainArray)
+    snackArray = sortItems("price", snackArray)
+    
+    function populateData(data) {
+        //Add each snack item
+        $("#snackCol").css("grid-template-rows", "repeat(" + snackCount +", 1fr)");
+        for (let i = 0; i < snackCount; i++){
+            console.log(snackArray)
+            snackCard = createItemCard(snackArray[i], "snackCard")
+            $("#snackCol").append(snackCard)
+        }
+        //Add each Main item
+        $("#mainCol").css("grid-template-rows", "repeat(" + snackCount +", 1fr)");
+        for (let i = 0; i < snackCount; i++){
+            snackItem = {
+                category: "Main",
+                image: "sampleItem.png",
+                name: "Main item",
+                price: getRandomDetails()[0],
+                weight: getRandomDetails()[1]
+            }
+            snackCard = createItemCard(snackItem, "mainCard")
+            $("#mainCol").append(snackCard)
+        }
+        //Add each Drink item
+        $("#drinkCol").css("grid-template-rows", "repeat(" + snackCount +", 1fr)");
+        for (let i = 0; i < snackCount; i++){
+            snackItem = {
+                category: "Drink",
+                image: "sampleItem.png",
+                name: "Drink item",
+                price: getRandomDetails()[0],
+                weight: getRandomDetails()[1]
+            }
+            snackCard = createItemCard(snackItem, "drinkCard")
+            $("#drinkCol").append(snackCard)
+        }
+
+        drinkPadder = $('<div class="padder" id="drinkPadder">No more items!</div>')
+        $("#drinkCol").append(drinkPadder)
+
+        snackPadder = $('<div class="padder" id="snackPadder">No more items!</div>')
+        $("#snackCol").append(snackPadder)
+
+        mainPadder = $('<div class="padder" id="mainPadder">No more items!</div>')
+        $("#mainCol").append(mainPadder)
+    }
+    populateData()
     //Add visibleItem class to items that are visible
     function handleIntersection(entries, observer) {
         entries.forEach(entry => {
@@ -111,10 +208,7 @@ $(document).ready(function(){
     });
 
 
-    function getDetailsAndUpdate(){
-        // snacks = $("#snackCol")
-        // console.log("Getting snacks visible...")
-
+    function getDetailsAndUpdate(){//Get the current selected items and update the details pane
         snacksVisible = $(".snackCard.visibleItem")
         mainsVisible = $(".mainCard.visibleItem")
         drinksVisible = $(".drinkCard.visibleItem")
@@ -161,7 +255,8 @@ $(document).ready(function(){
 
     }
 
-    setInterval(getDetailsAndUpdate, 1000)
+    setInterval(getDetailsAndUpdate, 1000) //Schedule to happen every second
+
 
 
 
